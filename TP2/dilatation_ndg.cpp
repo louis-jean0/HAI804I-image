@@ -26,13 +26,12 @@ int main(int argc, char* argv[]) {
     lire_image_pgm(nomImgLue, ImgIn, nTaille);
     allocation_tableau(ImgOut, OCTET, nTaille);
 
-    ouverture_binaire(ImgIn,ImgOut,nH,nW);
+    dilatation_ndg(ImgIn, ImgOut, nH, nW);
 
     ecrire_image_pgm(nomImageEcrite, ImgOut, nH, nW);
     free(ImgIn);
     free(ImgOut);
 
     return 0;
-
 
 }

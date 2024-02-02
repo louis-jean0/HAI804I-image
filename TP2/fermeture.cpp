@@ -16,7 +16,7 @@ int main(int argc, char* argv[]) {
 
     }
 
-    OCTET *ImgIn,*ImgOut1,*ImgOut2;
+    OCTET *ImgIn,*ImgOut;
 
     lire_nb_lignes_colonnes_image_pgm(nomImgLue, &nH, &nW);
 
@@ -24,39 +24,14 @@ int main(int argc, char* argv[]) {
 
     allocation_tableau(ImgIn, OCTET, nTaille);
     lire_image_pgm(nomImgLue, ImgIn, nTaille);
-    allocation_tableau(ImgOut1, OCTET, nTaille);
+    allocation_tableau(ImgOut, OCTET, nTaille);
 
-    for(int x = 1; x < nW - 1; x++) { // Bons indices pour respecter les problèmes sur les bords
-        for(int y = 1; y < nH - 1; y++) {
+    fermeture_binaire(ImgIn,ImgOut,nH,nW);
 
-            int pixel = ImgIn[indiceImage(x, y, nW)];
-            int vDroite = ImgIn[indiceImage(x + 1, y, nW)];
-            int vGauche = ImgIn[indiceImage(x - 1, y, nW)];
-            int vBas = ImgIn[indiceImage(x, y + 1, nW)];
-            int vHaut = ImgIn[indiceImage(x, y - 1, nW)];
-
-            if(!(vDroite || vGauche || vHaut || vBas)) {
-                ImgOut1[indiceImage(x, y, nW)] = 0;
-            }
-
-            else {
-                ImgOut1[indiceImage(x, y, nW)]  = ImgIn[indiceImage(x, y, nW)];
-            }
-
-        }
-
-    }
-
-    allocation_tableau(ImgOut2, OCTET, nTaille);
-
-    erosion_binaire(ImgOut1, ImgOut2, nH, nW);
-
-    ecrire_image_pgm(nomImageEcrite, ImgOut2, nH, nW);
+    ecrire_image_pgm(nomImageEcrite, ImgOut, nH, nW);
     free(ImgIn);
-    free(ImgOut1);
-    free(ImgOut2);
+    free(ImgOut);
 
     return 0;
-
 
 }

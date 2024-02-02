@@ -260,6 +260,9 @@ int indiceImageCouleur(char C, int x, int y, int width) {
 
 /*===========================================================================*/
 void erosion_binaire(OCTET *ImgIn, OCTET *ImgOut, int nH, int nW) {
+   for(int i = 0; i < nH * nW; i++) { // Premier traitement afin d'avoir des valeurs sur les bords (mêmes valeurs que l'image d'entrée)
+      ImgOut[i] = ImgIn[i];
+   } 
 
    for(int x = 1; x < nW - 1; x++) { // Bons indices pour respecter les problèmes sur les bords
         for(int y = 1; y < nH - 1; y++) {
@@ -282,6 +285,9 @@ void erosion_binaire(OCTET *ImgIn, OCTET *ImgOut, int nH, int nW) {
 
 /*===========================================================================*/
 void dilatation_binaire(OCTET *ImgIn, OCTET *ImgOut, int nH, int nW) {
+   for(int i = 0; i < nH * nW; i++) { // Premier traitement afin d'avoir des valeurs sur les bords (mêmes valeurs que l'image d'entrée)
+      ImgOut[i] = ImgIn[i];
+   }
 
    for(int x = 1; x < nW - 1; x++) { // Bons indices pour respecter les problèmes sur les bords
       for(int y = 1; y < nH - 1; y++) {
@@ -299,6 +305,70 @@ void dilatation_binaire(OCTET *ImgIn, OCTET *ImgOut, int nH, int nW) {
          }
       }
    }
+}
+/*===========================================================================*/
+
+/*===========================================================================*/
+void fermeture_binaire(OCTET *ImgIn, OCTET *ImgOut, int nH, int nW) {
+   OCTET* ImgIntermediaire;
+   allocation_tableau(ImgIntermediaire,OCTET,nH*nW);
+   dilatation_binaire(ImgIn,ImgIntermediaire,nH,nW);
+   erosion_binaire(ImgIntermediaire,ImgOut,nH,nW);
+}
+/*===========================================================================*/
+
+/*===========================================================================*/
+void ouverture_binaire(OCTET *ImgIn, OCTET *ImgOut, int nH, int nW) {
+   OCTET* ImgIntermediaire;
+   allocation_tableau(ImgIntermediaire,OCTET,nH*nW);
+   erosion_binaire(ImgIn,ImgIntermediaire,nH,nW);
+   dilatation_binaire(ImgIntermediaire,ImgOut,nH,nW);
+}
+/*===========================================================================*/
+
+/*===========================================================================*/
+void erosion_ndg(OCTET *ImgIn, OCTET *ImgOut, int nH, int nW) {
+   for(int i = 0; i < nH * nW; i++) { // Premier traitement afin d'avoir des valeurs sur les bords (mêmes valeurs que l'image d'entrée)
+      ImgOut[i] = ImgIn[i];
+   } 
+
+   for(int x = 1; x < nW - 1; x++) { // Bons indices pour respecter les problèmes sur les bords
+        for(int y = 1; y < nH - 1; y++) {
+            int vDroite = ImgIn[indiceImage(x + 1, y, nW)];
+            int vGauche = ImgIn[indiceImage(x - 1, y, nW)];
+            int vBas = ImgIn[indiceImage(x, y + 1, nW)];
+            int vHaut = ImgIn[indiceImage(x, y - 1, nW)];
+
+            int max1 = std::min(vDroite,vGauche);
+            int max2 = std::min(vBas,vHaut);
+            int value = std::min(max1,max2);
+
+            ImgOut[indiceImage(x,y,nW)] = value;
+      }
+   }  
+}
+/*===========================================================================*/
+
+/*===========================================================================*/
+void dilatation_ndg(OCTET *ImgIn, OCTET *ImgOut, int nH, int nW) {
+   for(int i = 0; i < nH * nW; i++) { // Premier traitement afin d'avoir des valeurs sur les bords (mêmes valeurs que l'image d'entrée)
+      ImgOut[i] = ImgIn[i];
+   } 
+
+   for(int x = 1; x < nW - 1; x++) { // Bons indices pour respecter les problèmes sur les bords
+        for(int y = 1; y < nH - 1; y++) {
+            int vDroite = ImgIn[indiceImage(x + 1, y, nW)];
+            int vGauche = ImgIn[indiceImage(x - 1, y, nW)];
+            int vBas = ImgIn[indiceImage(x, y + 1, nW)];
+            int vHaut = ImgIn[indiceImage(x, y - 1, nW)];
+
+            int max1 = std::max(vDroite,vGauche);
+            int max2 = std::max(vBas,vHaut);
+            int value = std::max(max1,max2);
+
+            ImgOut[indiceImage(x,y,nW)] = value;
+      }
+   }  
 }
 /*===========================================================================*/
 
