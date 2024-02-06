@@ -373,6 +373,24 @@ void dilatation_ndg(OCTET *ImgIn, OCTET *ImgOut, int nH, int nW) {
 /*===========================================================================*/
 
 /*===========================================================================*/
+void fermeture_ndg(OCTET *ImgIn, OCTET *ImgOut, int nH, int nW) {
+   OCTET* ImgIntermediaire;
+   allocation_tableau(ImgIntermediaire,OCTET,nH*nW);
+   dilatation_ndg(ImgIn,ImgIntermediaire,nH,nW);
+   erosion_ndg(ImgIntermediaire,ImgOut,nH,nW);
+}
+/*===========================================================================*/
+
+/*===========================================================================*/
+void ouverture_ndg(OCTET *ImgIn, OCTET *ImgOut, int nH, int nW) {
+   OCTET* ImgIntermediaire;
+   allocation_tableau(ImgIntermediaire,OCTET,nH*nW);
+   erosion_ndg(ImgIn,ImgIntermediaire,nH,nW);
+   dilatation_ndg(ImgIntermediaire,ImgOut,nH,nW);
+}
+/*===========================================================================*/
+
+/*===========================================================================*/
 double distance_euclidienne_ppm(OCTET pixel1[3], OCTET pixel2[3]) {
    return sqrt(pow(pixel2[0] - pixel1[0],2) +
                pow(pixel2[1] - pixel1[1],2) +
