@@ -230,30 +230,9 @@ int indiceImage(int x, int y, int width) {
 /*===========================================================================*/
 
 /*===========================================================================*/
-int indiceImageCouleur(char C, int x, int y, int width) {
+int indiceImageCouleur(int x, int y, int width, int c) {
 
-   int indice;
-
-   switch (C)
-   {
-      case 'R':
-         indice = 0;
-      break;
-
-      case 'G':
-         indice = 1;
-      break;
-
-      case 'B':
-         indice = 2;
-      break;
-
-      default:
-         perror("Canal non précisé");
-
-   }
-
-   return (3 * ((y * width) + x)) + indice;
+   return (3 * ((y * width) + x)) + c;
 
 }
 /*===========================================================================*/
@@ -387,6 +366,78 @@ void ouverture_ndg(OCTET *ImgIn, OCTET *ImgOut, int nH, int nW) {
    allocation_tableau(ImgIntermediaire,OCTET,nH*nW);
    erosion_ndg(ImgIn,ImgIntermediaire,nH,nW);
    dilatation_ndg(ImgIntermediaire,ImgOut,nH,nW);
+}
+/*===========================================================================*/
+
+/*===========================================================================*/
+void erosion_couleur(OCTET *ImgIn, OCTET *ImgOut, int nH, int nW) {
+    // Copie des valeurs sur les bords
+    int nTaille3 = nH * nW * 3;
+    for(int i = 0; i < nTaille3; i++) {
+        ImgOut[i] = ImgIn[i];
+    }
+
+    for(int x = 1; x < nW - 1; x++) {
+        for(int y = 1; y < nH - 1; y++) {
+            for(int c = 0; c < 3; c++) { // Boucle sur chaque canal de couleur
+                int vDroite = ImgIn[indiceImageCouleur(x + 1, y, nW, c)];
+                int vGauche = ImgIn[indiceImageCouleur(x - 1, y, nW, c)];
+                int vBas = ImgIn[indiceImageCouleur(x, y + 1, nW, c)];
+                int vHaut = ImgIn[indiceImageCouleur(x, y - 1, nW, c)];
+
+                int min1 = std::min(vDroite, vGauche);
+                int min2 = std::min(vBas, vHaut);
+                int value = std::min(min1, min2);
+
+                ImgOut[indiceImageCouleur(x, y, nW, c)] = value;
+            }
+        }
+    }
+}
+/*===========================================================================*/
+
+/*===========================================================================*/
+void dilatation_couleur(OCTET *ImgIn, OCTET *ImgOut, int nH, int nW) {
+    // Copie des valeurs sur les bords
+    int nTaille3 = nH * nW * 3;
+    for(int i = 0; i < nTaille3; i++) {
+        ImgOut[i] = ImgIn[i];
+    }
+
+    for(int x = 1; x < nW - 1; x++) {
+        for(int y = 1; y < nH - 1; y++) {
+            for(int c = 0; c < 3; c++) { // Boucle sur chaque canal de couleur
+                int vDroite = ImgIn[indiceImageCouleur(x + 1, y, nW, c)];
+                int vGauche = ImgIn[indiceImageCouleur(x - 1, y, nW, c)];
+                int vBas = ImgIn[indiceImageCouleur(x, y + 1, nW, c)];
+                int vHaut = ImgIn[indiceImageCouleur(x, y - 1, nW, c)];
+
+                int max1 = std::max(vDroite, vGauche);
+                int max2 = std::max(vBas, vHaut);
+                int value = std::max(max1, max2);
+
+                ImgOut[indiceImageCouleur(x, y, nW, c)] = value;
+            }
+        }
+    }
+}
+/*===========================================================================*/
+
+/*===========================================================================*/
+void fermeture_couleur(OCTET *ImgIn, OCTET *ImgOut, int nH, int nW) {
+   OCTET* ImgIntermediaire;
+   allocation_tableau(ImgIntermediaire,OCTET,nH*nW);
+   dilatation_couleur(ImgIn,ImgIntermediaire,nH,nW);
+   erosion_couleur(ImgIntermediaire,ImgOut,nH,nW);
+}
+/*===========================================================================*/
+
+/*===========================================================================*/
+void ouverture_couleur(OCTET *ImgIn, OCTET *ImgOut, int nH, int nW) {
+   OCTET* ImgIntermediaire;
+   allocation_tableau(ImgIntermediaire,OCTET,nH*nW);
+   erosion_couleur(ImgIn,ImgIntermediaire,nH,nW);
+   dilatation_couleur(ImgIntermediaire,ImgOut,nH,nW);
 }
 /*===========================================================================*/
 
