@@ -426,7 +426,7 @@ void dilatation_couleur(OCTET *ImgIn, OCTET *ImgOut, int nH, int nW) {
 /*===========================================================================*/
 void fermeture_couleur(OCTET *ImgIn, OCTET *ImgOut, int nH, int nW) {
    OCTET* ImgIntermediaire;
-   allocation_tableau(ImgIntermediaire,OCTET,nH*nW);
+   allocation_tableau(ImgIntermediaire,OCTET,nH*nW*3);
    dilatation_couleur(ImgIn,ImgIntermediaire,nH,nW);
    erosion_couleur(ImgIntermediaire,ImgOut,nH,nW);
 }
@@ -435,7 +435,7 @@ void fermeture_couleur(OCTET *ImgIn, OCTET *ImgOut, int nH, int nW) {
 /*===========================================================================*/
 void ouverture_couleur(OCTET *ImgIn, OCTET *ImgOut, int nH, int nW) {
    OCTET* ImgIntermediaire;
-   allocation_tableau(ImgIntermediaire,OCTET,nH*nW);
+   allocation_tableau(ImgIntermediaire,OCTET,nH*nW*3);
    erosion_couleur(ImgIn,ImgIntermediaire,nH,nW);
    dilatation_couleur(ImgIntermediaire,ImgOut,nH,nW);
 }
