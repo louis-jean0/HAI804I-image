@@ -468,3 +468,13 @@ void RGBtoYCbCr(OCTET* ImgIn, OCTET* ImgY, OCTET* ImgCb, OCTET* ImgCr, int nTail
    }
 }
 /*===========================================================================*/
+
+/*===========================================================================*/
+void reconstruire_ppm(OCTET* ImgR, OCTET* ImgG, OCTET* ImgB, OCTET* ImgOut, int nTaille) {
+   for(int i = 0; i < nTaille; i++) {
+         ImgOut[3*i] = ImgR[i];
+         ImgOut[3*i+1] = ImgG[i];
+         ImgOut[3*i+2] = ImgB[i];
+      }
+}
+/*===========================================================================*/
