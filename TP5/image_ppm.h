@@ -230,7 +230,7 @@ int indiceImage(int x, int y, int width) {
 
 int indiceImageCouleur(char C, int x, int y, int width) {
 
-   int indice;
+   int indice = 0;
 
    switch (C)
    {
