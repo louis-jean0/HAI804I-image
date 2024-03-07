@@ -31,7 +31,7 @@ int main(int argc, char* argv[]) {
             int left_pixel = ImgIn[indiceImage(i,j-1,nW)];
             int up_pixel = ImgIn[indiceImage(i-1,j,nW)];
 
-            int laplacien = 4*current_pixel - up_pixel - down_pixel - left_pixel - right_pixel + 128;
+            int laplacien = 4*current_pixel - up_pixel - down_pixel - left_pixel - right_pixel; // Ici on ne met pas +128
 
             ImgOut[indiceImage(i,j,nW)] = laplacien;
 
