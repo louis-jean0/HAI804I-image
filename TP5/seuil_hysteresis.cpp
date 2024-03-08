@@ -12,8 +12,8 @@ int main(int argc, char* argv[]) {
 
     sscanf(argv[1],"%s",nomImgLue);
     sscanf(argv[2],"%s",nomImgEcrite);
-    sscanf(argv[3],"%d",&sB);
-    sscanf(argv[4],"%d",&sH);
+    sB = atoi(argv[3]);
+    sH = atoi(argv[4]);
 
     OCTET *ImgIn,*ImgPreSeuillee,*ImgOut;
 
@@ -60,19 +60,21 @@ int main(int argc, char* argv[]) {
             int vHg = ImgPreSeuillee[indiceImage(i-1,j-1,nW)];
             int vBg = ImgPreSeuillee[indiceImage(i-1,j+1,nW)];
 
-            int norme = current_pixel;
+            int deltaX = abs(vDroite - current_pixel);
+            int deltaY = abs(vBas - current_pixel);
 
-            if(sB < norme && sH > norme) {
-                if((vDroite == 255) || (vGauche == 255) || (vBas == 255) || (vHaut == 255) || (vHd == 255) || (vBd == 255) || (vHg == 255) || (vBg == 255)) {
-                    norme = 255;
-                }
+            int norme = sqrt((deltaX * deltaX)+(deltaY * deltaY));
+
+            int pixel = ImgPreSeuillee[indiceImage(i,j,nW)];
+
+            if(sB < pixel && sH > pixel && ((vDroite == 255) || (vGauche == 255) || (vBas == 255) || (vHaut == 255) || (vHd == 255) || (vBd == 255) || (vHg == 255) || (vBg == 255))) {
+                pixel = 255;
             }
-
             else {
-                norme = 0;
+                pixel = 0;
             }
 
-            ImgOut[indiceImage(i,j,nW)] = norme;
+            ImgOut[indiceImage(i,j,nW)] = pixel;
 
         }
     }
